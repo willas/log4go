@@ -66,7 +66,7 @@ func NewFileLogWriter(fname string, rotate bool) *FileLogWriter {
 		filename:  fname,
 		format:    "[%D %T] [%L] (%S) %M",
 		rotate:    rotate,
-		maxbackup: 6,
+		maxbackup: 2,
 	}
 
 	// open the file for the first time
