@@ -95,7 +95,11 @@ var (
 	// LogBufferLength specifies how many log messages a particular log4go
 	// logger can buffer at a time before writing them.
 	LogBufferLength = 32
+
+	// stack level
+	LogStackLevel = 2
 )
+
 
 /****** LogRecord ******/
 
@@ -159,6 +163,10 @@ func NewDefaultLogger(lvl Level) Logger {
 	}
 }
 
+func SetStackLevel(sl int) {
+	LogStackLevel = sl
+}
+
 // Closes all log writers in preparation for exiting the program or a
 // reconfiguration of logging.  Calling this is not really imperative, unless
 // you want to guarantee that all log messages are written.  Close removes
@@ -196,7 +204,7 @@ func (log Logger) intLogf(lvl Level, format string, args ...interface{}) {
 	}
 
 	// Determine caller func
-	pc, _, lineno, ok := runtime.Caller(2)
+	pc, _, lineno, ok := runtime.Caller(LogStackLevel)
 	src := ""
 	if ok {
 		src = fmt.Sprintf("%s:%d", runtime.FuncForPC(pc).Name(), lineno)
@@ -240,7 +248,7 @@ func (log Logger) intLogc(lvl Level, closure func() string) {
 	}
 
 	// Determine caller func
-	pc, _, lineno, ok := runtime.Caller(2)
+	pc, _, lineno, ok := runtime.Caller(LogStackLevel)
 	src := ""
 	if ok {
 		src = fmt.Sprintf("%s:%d", runtime.FuncForPC(pc).Name(), lineno)
